@@ -5,8 +5,12 @@ import {
   IconArrowLeft,
   IconBrandTabler,
   IconSettings,
-  IconUserBolt,
   IconUser,
+  IconBoltFilled,
+  IconVocabulary,
+  IconListCheck,
+  IconBook,
+  IconUsers,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { motion } from "motion/react";
@@ -22,24 +26,24 @@ export function SidebarDemo() {
       ),
     },
     {
-      label: "Profile",
+      label: "Study",
       href: "#",
       icon: (
-        <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
+        <IconVocabulary className="text-neutral-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
       ),
     },
     {
-      label: "Settings",
+      label: "Modules",
       href: "#",
       icon: (
-        <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
+        <IconListCheck className="text-neutral-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
       ),
     },
     {
-      label: "Logout",
+      label: "Leaderboard",
       href: "#",
       icon: (
-        <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
+        <IconUsers className="text-neutral-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
       ),
     },
   ];
