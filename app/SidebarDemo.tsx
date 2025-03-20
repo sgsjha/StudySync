@@ -6,135 +6,101 @@ import {
   IconBrandTabler,
   IconSettings,
   IconUser,
-  IconBoltFilled,
   IconVocabulary,
   IconListCheck,
-  IconBook,
   IconUsers,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
+// Import the different sections
+import { DashboardSection } from "../components/sections/DashboardSection";
+import { StudySection } from "../components/sections/StudySection";
+import { ModulesSection } from "../components/sections/ModulesSection";
+import { LeaderboardSection } from "../components/sections/LeaderboardSection";
+
 export function SidebarDemo() {
+  // State to track the selected section
+  const [activeSection, setActiveSection] = useState("Dashboard");
+
   const links = [
     {
       label: "Dashboard",
-      href: "#",
-      icon: (
-        <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
-      ),
+      section: "Dashboard",
+      icon: <IconBrandTabler className="h-5 w-5" />,
     },
     {
       label: "Study",
-      href: "#",
-      icon: (
-        <IconVocabulary className="text-neutral-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
-      ),
+      section: "Study",
+      icon: <IconVocabulary className="h-5 w-5" />,
     },
     {
       label: "Modules",
-      href: "#",
-      icon: (
-        <IconListCheck className="text-neutral-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
-      ),
+      section: "Modules",
+      icon: <IconListCheck className="h-5 w-5" />,
     },
     {
       label: "Leaderboard",
-      href: "#",
-      icon: (
-        <IconUsers className="text-neutral-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
-      ),
+      section: "Leaderboard",
+      icon: <IconUsers className="h-5 w-5" />,
     },
   ];
-  const [open, setOpen] = useState(false);
+
   return (
-    <div
-      className={cn(
-        "flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-full h-screen border border-neutral-200 dark:border-neutral-700 overflow-hidden" // for your use case, use `h-screen` instead of `h-[60vh]`
-      )}
-    >
-      <Sidebar open={open} setOpen={setOpen} animate={false}>
+    <div className="flex flex-col md:flex-row w-full h-screen bg-gray-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 overflow-hidden">
+      <Sidebar open={true} setOpen={() => {}} animate={false}>
         <SidebarBody className="justify-between gap-10">
-          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            <>
-              <Logo />
-            </>
+          <div className="flex flex-col flex-1 overflow-y-auto">
+            <Logo />
             <div className="mt-8 flex flex-col gap-2">
               {links.map((link, idx) => (
-                <SidebarLink key={idx} link={link} />
+                <button
+                  key={idx}
+                  onClick={() => setActiveSection(link.section)}
+                  className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-neutral-700"
+                >
+                  {link.icon}
+                  <span className="text-neutral-700 dark:text-neutral-200">
+                    {link.label}
+                  </span>
+                </button>
               ))}
             </div>
           </div>
           <div>
             <SidebarLink
               link={{
-                label: "Sarthak Jha", // change this to user's Name
+                label: "Sarthak Jha",
                 href: "#",
                 icon: (
-                  <IconUser className="h-7 w-7 shrink-0 text-neutral-700 dark:text-neutral-200" />
+                  <IconUser className="h-7 w-7 text-neutral-700 dark:text-neutral-200" />
                 ),
               }}
             />
           </div>
         </SidebarBody>
       </Sidebar>
-      <Dashboard />
+
+      {/* Render the active section */}
+      <div className="flex flex-1 p-4">
+        {activeSection === "Dashboard" && <DashboardSection />}
+        {activeSection === "Study" && <StudySection />}
+        {activeSection === "Modules" && <ModulesSection />}
+        {activeSection === "Leaderboard" && <LeaderboardSection />}
+      </div>
     </div>
   );
 }
 
-export const Logo = () => {
-  return (
-    <Link
-      href="#"
-      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
-    >
-      <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm shrink-0" />
-      <motion.span
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="font-medium text-black dark:text-white whitespace-pre"
-      >
-        Study Sync
-      </motion.span>
-    </Link>
-  );
-};
-
-export const LogoIcon = () => {
-  return (
-    <Link
-      href="#"
-      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
-    >
-      <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm shrink-0" />
-    </Link>
-  );
-};
-
-// Dummy dashboard component with content
-const Dashboard = () => {
-  return (
-    <div className="flex flex-1">
-      <div className="p-2 md:p-10 rounded-tl-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full h-full">
-        <div className="flex gap-2">
-          {[...new Array(4)].map((_, i) => (
-            <div
-              key={"first" + i}
-              className="h-20 w-full rounded-lg bg-gray-100 dark:bg-neutral-800 animate-pulse"
-            ></div>
-          ))}
-        </div>
-        <div className="flex gap-2 flex-1">
-          {[...new Array(2)].map((_, i) => (
-            <div
-              key={"second" + i}
-              className="h-full w-full rounded-lg bg-gray-100 dark:bg-neutral-800 animate-pulse"
-            ></div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
+const Logo = () => (
+  <Link
+    href="#"
+    className="font-normal flex space-x-2 items-center text-sm text-black py-1"
+  >
+    <div className="h-5 w-6 bg-black dark:bg-white rounded-lg shrink-0" />
+    <motion.span className="font-medium text-black dark:text-white whitespace-pre">
+      Study Sync
+    </motion.span>
+  </Link>
+);
