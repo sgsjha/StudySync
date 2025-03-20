@@ -15,14 +15,17 @@ import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 // Import the different sections
-import { DashboardSection } from "../components/sections/DashboardSection";
-import { StudySection } from "../components/sections/StudySection";
-import { ModulesSection } from "../components/sections/ModulesSection";
-import { LeaderboardSection } from "../components/sections/LeaderboardSection";
+import { DashboardSection } from "@/components/sections/DashboardSection";
+import { StudySection } from "@/components/sections/StudySection";
+import { ModulesSection } from "@/components/sections/ModulesSection";
+import { LeaderboardSection } from "@/components/sections/LeaderboardSection";
 
 export function SidebarDemo() {
   // State to track the selected section
   const [activeSection, setActiveSection] = useState("Dashboard");
+
+  // Added local state to handle sidebar open/close behavior
+  const [open, setOpen] = useState(false);
 
   const links = [
     {
@@ -49,7 +52,7 @@ export function SidebarDemo() {
 
   return (
     <div className="flex flex-col md:flex-row w-full h-screen bg-gray-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 overflow-hidden">
-      <Sidebar open={true} setOpen={() => {}} animate={false}>
+      <Sidebar open={open} setOpen={setOpen} animate={false}>
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-col flex-1 overflow-y-auto">
             <Logo />
