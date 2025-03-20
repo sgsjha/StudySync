@@ -51,7 +51,7 @@ export function SidebarDemo() {
   ];
 
   return (
-    <div className="flex flex-col md:flex-row w-full h-screen bg-gray-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 overflow-hidden">
+    <div className="flex flex-col md:flex-row w-full h-screen bg-gray-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 overflow-hidden md:overflow-auto">
       <Sidebar open={open} setOpen={setOpen} animate={false}>
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-col flex-1 overflow-y-auto">
@@ -86,7 +86,7 @@ export function SidebarDemo() {
       </Sidebar>
 
       {/* Render the active section */}
-      <div className="flex flex-1 p-4">
+      <div className="flex flex-1 p-4 overflow-y-auto h-full">
         {activeSection === "Dashboard" && <DashboardSection />}
         {activeSection === "Study" && <StudySection />}
         {activeSection === "Modules" && <ModulesSection />}
