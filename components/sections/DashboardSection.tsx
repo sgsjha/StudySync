@@ -3,80 +3,73 @@
 // THIS NEEDS TO BE THE BENTO GRID
 // MAIN DASHBOARD COMPONENT
 
-import { cn } from "@/lib/utils";
-import React from "react";
-import { BentoGrid, BentoGridItem } from "../ui/bento-grid";
-import {
-  IconArrowWaveRightUp,
-  IconBoxAlignRightFilled,
-  IconBoxAlignTopLeft,
-  IconClipboardCopy,
-  IconFileBroken,
-  IconSignature,
-  IconTableColumn,
-} from "@tabler/icons-react";
+import { BentoGridItem } from "../ui/bento-grid";
+import { StudyHoursChart } from "../charts/StudyHoursChart";
+import { ModulePerformance } from "../widgets/ModulePerformance";
+import { Leaderboard } from "../widgets/Leaderboard";
+
+const Skeleton = () => (
+  <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100" />
+);
 
 export function DashboardSection() {
   return (
-    <BentoGrid className="w-full h-full overflow-auto px-4">
-      {items.map((item, i) => (
-        <BentoGridItem
-          key={i}
-          title={item.title}
-          description={item.description}
-          header={item.header}
-          icon={item.icon}
-          className={i === 3 || i === 6 ? "md:col-span-2" : ""}
-        />
-      ))}
-    </BentoGrid>
+    <div className="grid md:grid-cols-2 gap-4 w-full px-4 pb-10">
+      <BentoGridItem
+        title="Topics Covered"
+        description="27/80"
+        header={<Skeleton />}
+      />
+      <BentoGridItem
+        title="Points & Correctness"
+        description="37 points, 77% correct"
+        header={<Skeleton />}
+      />
+      <BentoGridItem
+        title="Avg. Session Length"
+        description="2h 34m"
+        header={<Skeleton />}
+      />
+      <BentoGridItem
+        title="Hours of Study"
+        description="Study patterns over time"
+        header={<StudyHoursChart />}
+        className="md:col-span-2"
+      />
+
+      <BentoGridItem
+        title="Current Streak"
+        description="2 days"
+        header={<Skeleton />}
+      />
+      <BentoGridItem
+        title="Longest Streak"
+        description="6 days"
+        header={<Skeleton />}
+      />
+      <BentoGridItem
+        title="Total Study Time"
+        description="39h 20m"
+        header={<Skeleton />}
+      />
+
+      <BentoGridItem
+        title="Weakest Modules"
+        description="Improve these topics"
+        header={<ModulePerformance type="weak" />}
+      />
+      <BentoGridItem
+        title="Strongest Modules"
+        description="You excel in these!"
+        header={<ModulePerformance type="strong" />}
+      />
+
+      <BentoGridItem
+        title="Average Study Time Leaderboard"
+        description="See top students"
+        header={<Leaderboard />}
+        className="md:col-span-2"
+      />
+    </div>
   );
 }
-const Skeleton = () => (
-  <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100"></div>
-);
-const items = [
-  {
-    title: "The Dawn of Innovation",
-    description: "Explore the birth of groundbreaking ideas and inventions.",
-    header: <Skeleton />,
-    icon: <IconClipboardCopy className="h-4 w-4 text-neutral-500" />,
-  },
-  {
-    title: "The Digital Revolution",
-    description: "Dive into the transformative power of technology.",
-    header: <Skeleton />,
-    icon: <IconFileBroken className="h-4 w-4 text-neutral-500" />,
-  },
-  {
-    title: "The Art of Design",
-    description: "Discover the beauty of thoughtful and functional design.",
-    header: <Skeleton />,
-    icon: <IconSignature className="h-4 w-4 text-neutral-500" />,
-  },
-  {
-    title: "The Power of Communication",
-    description:
-      "Understand the impact of effective communication in our lives.",
-    header: <Skeleton />,
-    icon: <IconTableColumn className="h-4 w-4 text-neutral-500" />,
-  },
-  {
-    title: "The Pursuit of Knowledge",
-    description: "Join the quest for understanding and enlightenment.",
-    header: <Skeleton />,
-    icon: <IconArrowWaveRightUp className="h-4 w-4 text-neutral-500" />,
-  },
-  {
-    title: "The Joy of Creation",
-    description: "Experience the thrill of bringing ideas to life.",
-    header: <Skeleton />,
-    icon: <IconBoxAlignTopLeft className="h-4 w-4 text-neutral-500" />,
-  },
-  {
-    title: "The Spirit of Adventure",
-    description: "Embark on exciting journeys and thrilling discoveries.",
-    header: <Skeleton />,
-    icon: <IconBoxAlignRightFilled className="h-4 w-4 text-neutral-500" />,
-  },
-];
