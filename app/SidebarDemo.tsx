@@ -19,6 +19,7 @@ import { DashboardSection } from "@/components/sections/DashboardSection";
 import { StudySection } from "@/components/sections/StudySection";
 import { ModulesSection } from "@/components/sections/ModulesSection";
 import { LeaderboardSection } from "@/components/sections/LeaderboardSection";
+import { StopwatchProvider } from "./contexts/StopwatchContext";
 
 export function SidebarDemo() {
   // State to track the selected section
@@ -87,10 +88,14 @@ export function SidebarDemo() {
 
       {/* Render the active section */}
       <div className="flex flex-1 p-4 overflow-y-auto h-full">
-        {activeSection === "Dashboard" && <DashboardSection />}
-        {activeSection === "Study" && <StudySection />}
-        {activeSection === "Modules" && <ModulesSection />}
-        {activeSection === "Leaderboard" && <LeaderboardSection />}
+        <StopwatchProvider>
+          {" "}
+          {/* NOTE : This is here because it gives the app the better behavior of  */}
+          {activeSection === "Dashboard" && <DashboardSection />}
+          {activeSection === "Study" && <StudySection />}
+          {activeSection === "Modules" && <ModulesSection />}
+          {activeSection === "Leaderboard" && <LeaderboardSection />}
+        </StopwatchProvider>
       </div>
     </div>
   );
