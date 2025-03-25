@@ -16,41 +16,37 @@ export function DashboardSection() {
   return (
     <div className="grid md:grid-cols-2 gap-4 w-full px-4 pb-10">
       <BentoGridItem
-        title="Topics Covered"
-        description="27/80"
-        header={<Skeleton />}
+        title="Current Streak"
+        description="2 days"
+        className="md:row-span-3"
       />
+
       <BentoGridItem
-        title="Points & Correctness"
-        description="37 points, 77% correct"
-        header={<Skeleton />}
+        title="Longest Streak"
+        description="6 days"
+        className="md:row-span-3"
       />
-      <BentoGridItem
-        title="Avg. Session Length"
-        description="2h 34m"
-        header={<Skeleton />}
-      />
+
+      <BentoGridItem title="Total Study Time" description="39h 20m" />
+
+      <BentoGridItem title="Avg. Session Length" description="2h 34m" />
+
       <BentoGridItem
         title="Hours of Study"
         description="Study patterns over time"
         header={<StudyHoursChart />}
-        className="md:col-span-2"
       />
 
       <BentoGridItem
-        title="Current Streak"
-        description="2 days"
-        header={<Skeleton />}
-      />
-      <BentoGridItem
-        title="Longest Streak"
-        description="6 days"
-        header={<Skeleton />}
-      />
-      <BentoGridItem
-        title="Total Study Time"
-        description="39h 20m"
-        header={<Skeleton />}
+        title="Next Assignments"
+        description="Next 3 due assignments"
+        header={
+          <div className="text-sm text-neutral-700 dark:text-neutral-200">
+            <p>1. COMP 109 Test on 28/03</p>
+            <p>2. COMP 111 : Assignment 2 due on 30/03</p>
+            <p>3. COMP 116 : Assignment 1 due on 31/03</p>
+          </div>
+        }
       />
 
       <BentoGridItem

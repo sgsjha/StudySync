@@ -1,6 +1,7 @@
 "use client";
 
 export function Leaderboard() {
+  // this will need to be pulled from firebase
   const data = [
     { name: "Jesse Thomas", time: "7h", rank: 1, img: "/avatars/jesse.png" },
     {
