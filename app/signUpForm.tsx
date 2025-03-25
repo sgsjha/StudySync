@@ -3,8 +3,13 @@ import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-// import { IconBrandGoogle } from "@tabler/icons-react";
-//comment out for when using for auth
+
+// Firebase imports
+import { auth } from "@/firebase-config";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
 export function SignupFormDemo({
   onAuthSuccess,
@@ -12,13 +17,39 @@ export function SignupFormDemo({
   onAuthSuccess: () => void;
 }) {
   const [isLoginMode, setIsLoginMode] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(
-      isLoginMode ? "Login form submitted" : "Sign Up form submitted"
-    );
-    onAuthSuccess(); // Switch to Sidebar when form is submitted
+
+    // 1. Get form field values
+    const email = (e.currentTarget.email as HTMLInputElement).value;
+    const password = (e.currentTarget.password as HTMLInputElement).value;
+
+    try {
+      if (!isLoginMode) {
+        // Sign Up
+        const userCred = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        console.log("Sign up success:", userCred.user);
+      } else {
+        // Login
+        const userCred = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        console.log("Login success:", userCred.user);
+      }
+      setErrorMsg(null);
+      onAuthSuccess(); // Switch to Sidebar when form is submitted
+    } catch (error: any) {
+      console.error("Auth error:", error);
+      setErrorMsg(error.message || "Something went wrong");
+    }
   };
 
   return (
@@ -55,6 +86,11 @@ export function SignupFormDemo({
           <Label htmlFor="password">Password</Label>
           <Input id="password" placeholder="••••••••" type="password" />
         </LabelInputContainer>
+
+        {/* Display Error if any */}
+        {errorMsg && (
+          <div className="mb-4 text-red-600 text-sm">{errorMsg}</div>
+        )}
 
         {/* Sign Up / Login Button */}
         <button
