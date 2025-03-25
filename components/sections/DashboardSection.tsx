@@ -8,9 +8,12 @@ import { StudyHoursChart } from "../charts/StudyHoursChart";
 import { ModulePerformance } from "../widgets/ModulePerformance";
 import { Leaderboard } from "../widgets/Leaderboard";
 
-const Skeleton = () => (
+/**
+ * const Skeleton = () => (
   <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100" />
 );
+ *  commented out for vercel test build
+ */
 
 export function DashboardSection() {
   return (

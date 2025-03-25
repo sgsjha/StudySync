@@ -1,7 +1,8 @@
 // components/sections/ModuleDetails.tsx
 "use client";
 import React from "react";
-import * as Progress from "@radix-ui/react-progress";
+//import * as Progress from "@radix-ui/react-progress";
+// commented out for vercel build test
 
 export default function ModuleDetails({
   module,
