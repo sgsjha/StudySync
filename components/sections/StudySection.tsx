@@ -24,10 +24,10 @@ export function StudySection() {
 
   return (
     <StopwatchProvider>
-      <div className="flex flex-col items-center justify-center w-full h-full text-center p-4 space-y-6">
-        <h1 className="text-xl font-semibold">Study</h1>
+      <div className="flex flex-col items-center justify-center w-full h-full text-center p-4 lg:space-y-15 space-y-6">
+        <h1 className="text-xl font-semibold lg:text-2xl">Study Time</h1>
 
-        <div className="flex flex-col items-center space-y-4">
+        <div className="flex flex-col items-center space-y-4 lg:scale-125">
           {/* Analog stopwatch: pass new Date(elapsed) */}
           <Clock value={new Date(elapsed)} size={200} renderNumbers />
 
