@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-
-// Firebase imports
 import { auth } from "@/firebase-config";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
+import { IconBrandGoogle } from "@tabler/icons-react";
 
 export function SignupFormDemo({
   onAuthSuccess,
@@ -22,13 +23,13 @@ export function SignupFormDemo({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // 1. Get form field values
+    // Get form field values
     const email = (e.currentTarget.email as HTMLInputElement).value;
     const password = (e.currentTarget.password as HTMLInputElement).value;
 
     try {
       if (!isLoginMode) {
-        // Sign Up
+        // Sign Up with Email/Password
         const userCred = await createUserWithEmailAndPassword(
           auth,
           email,
@@ -36,7 +37,7 @@ export function SignupFormDemo({
         );
         console.log("Sign up success:", userCred.user);
       } else {
-        // Login
+        // Login with Email/Password
         const userCred = await signInWithEmailAndPassword(
           auth,
           email,
@@ -45,10 +46,24 @@ export function SignupFormDemo({
         console.log("Login success:", userCred.user);
       }
       setErrorMsg(null);
-      onAuthSuccess(); // Switch to Sidebar when form is submitted
+      onAuthSuccess();
     } catch (error: any) {
       console.error("Auth error:", error);
       setErrorMsg(error.message || "Something went wrong");
+    }
+  };
+
+  // Handle Sign in with Google via popup
+  const handleGoogleSignIn = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      console.log("Google sign in success:", result.user);
+      setErrorMsg(null);
+      onAuthSuccess();
+    } catch (error: any) {
+      console.error("Google sign in error:", error);
+      setErrorMsg(error.message || "Something went wrong with Google sign in");
     }
   };
 
@@ -87,7 +102,6 @@ export function SignupFormDemo({
           <Input id="password" placeholder="••••••••" type="password" />
         </LabelInputContainer>
 
-        {/* Display Error if any */}
         {errorMsg && (
           <div className="mb-4 text-red-600 text-sm">{errorMsg}</div>
         )}
@@ -109,9 +123,21 @@ export function SignupFormDemo({
           <div className="flex-grow h-px bg-neutral-300 dark:bg-neutral-700" />
         </div>
 
+        {/* Google Sign In Button */}
+        <button
+          type="button"
+          onClick={handleGoogleSignIn}
+          className="bg-white dark:bg-gray-800 border border-neutral-300 dark:border-neutral-700 w-full py-2 rounded flex items-center justify-center gap-2"
+        >
+          <IconBrandGoogle className="h-5 w-5" />
+          <span className="text-neutral-800 dark:text-neutral-200">
+            Sign in with Google
+          </span>
+        </button>
+
         {/* Toggle Button for Switching Modes */}
         <button
-          className="bg-gradient-to-br from-gray-600 to-gray-900 dark:bg-gray-800 w-full text-white rounded-md h-10 font-medium shadow-input"
+          className="bg-gradient-to-br from-gray-600 to-gray-900 dark:bg-gray-800 w-full text-white rounded-md h-10 font-medium shadow-input mt-4"
           type="button"
           onClick={() => setIsLoginMode(!isLoginMode)}
         >
