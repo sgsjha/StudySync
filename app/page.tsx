@@ -3,16 +3,13 @@ import React, { useState } from "react";
 import { SignupFormDemo } from "./signUpForm";
 import { SidebarDemo } from "./SidebarDemo";
 
-// TO DO: Implement authentication logic
-// TO DO :
-
 export default function Home() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
     <>
       {isAuthenticated ? (
-        <SidebarDemo />
+        <SidebarDemo onLogout={() => setIsAuthenticated(false)} />
       ) : (
         <SignupFormDemo onAuthSuccess={() => setIsAuthenticated(true)} />
       )}

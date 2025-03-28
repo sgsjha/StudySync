@@ -2,17 +2,17 @@
 import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
-  IconArrowLeft,
   IconBrandTabler,
-  IconSettings,
-  IconUser,
   IconVocabulary,
   IconListCheck,
   IconUsers,
+  IconUser,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
+import { signOut } from "firebase/auth";
+import { auth } from "@/firebase-config";
 
 // Import the different sections
 import { DashboardSection } from "@/components/sections/DashboardSection";
@@ -21,11 +21,15 @@ import { ModulesSection } from "@/components/sections/ModulesSection";
 import { LeaderboardSection } from "@/components/sections/LeaderboardSection";
 import { StopwatchProvider } from "./contexts/StopwatchContext";
 
-export function SidebarDemo() {
+interface SidebarDemoProps {
+  onLogout: () => void;
+}
+
+export function SidebarDemo({ onLogout }: SidebarDemoProps) {
   // State to track the selected section
   const [activeSection, setActiveSection] = useState("Dashboard");
 
-  // Added local state to handle sidebar open/close behavior
+  // Local state for sidebar open/close behavior
   const [open, setOpen] = useState(false);
 
   const links = [
@@ -51,6 +55,17 @@ export function SidebarDemo() {
     },
   ];
 
+  // Logout handler that calls the parent's onLogout callback after successful sign out
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      console.log("User logged out successfully.");
+      onLogout();
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
   return (
     <div className="flex flex-col md:flex-row w-full h-screen bg-gray-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 overflow-hidden md:overflow-auto">
       <Sidebar open={open} setOpen={setOpen} animate={false}>
@@ -73,15 +88,16 @@ export function SidebarDemo() {
             </div>
           </div>
           <div>
-            <SidebarLink
-              link={{
-                label: "Sarthak Jha",
-                href: "#",
-                icon: (
-                  <IconUser className="h-7 w-7 text-neutral-700 dark:text-neutral-200" />
-                ),
-              }}
-            />
+            {/* Replace the static user label with a Logout button */}
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-neutral-700"
+            >
+              <IconUser className="h-7 w-7 text-neutral-700 dark:text-neutral-200" />
+              <span className="text-neutral-700 dark:text-neutral-200">
+                Log Out
+              </span>
+            </button>
           </div>
         </SidebarBody>
       </Sidebar>
@@ -89,8 +105,6 @@ export function SidebarDemo() {
       {/* Render the active section */}
       <div className="flex flex-1 p-4 overflow-y-auto h-full">
         <StopwatchProvider>
-          {" "}
-          {/* NOTE : This is here because it gives the app the better behavior of  */}
           {activeSection === "Dashboard" && <DashboardSection />}
           {activeSection === "Study" && <StudySection />}
           {activeSection === "Modules" && <ModulesSection />}
