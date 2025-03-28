@@ -15,7 +15,8 @@ interface ModuleType {
   notes: string;
   grades: string;
   assignments: string[];
-  // Additional fields like year, semester can be added if needed
+  year?: string;
+  semester?: string;
 }
 
 export function ModulesSection() {
@@ -137,7 +138,7 @@ export function ModulesSection() {
   );
 }
 
-/** A modal component for adding a new module */
+/** A modal component for adding a new module that only asks for Module Name, Year, and Semester */
 function AddModuleModal({
   onClose,
   onAddModule,
@@ -145,14 +146,19 @@ function AddModuleModal({
   onClose: () => void;
   onAddModule: (moduleData: Omit<ModuleType, "id">) => void;
 }) {
+  // Only ask for label, year, semester.
   const [formData, setFormData] = useState<Omit<ModuleType, "id">>({
     label: "",
+    // Default values for other fields
     lecturer: "",
     topics: [],
     notes: "",
     grades: "",
     assignments: [],
     value: 0,
+    // New fields:
+    year: "",
+    semester: "",
   });
 
   const handleChange = (
@@ -161,22 +167,15 @@ function AddModuleModal({
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      // For progress value, ensure it's a number.
       [name]: name === "value" ? Number(value) : value,
     }));
   };
 
-  // For simplicity, we use comma-separated values for topics and assignments.
-  const handleListChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value.split(",").map((item) => item.trim()),
-    }));
-  };
-
+  // We'll remove the list handler since we're not collecting topics/assignments here.
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // The new module will have only label, year, and semester filled.
+    // The other fields are set to default (empty or 0).
     onAddModule(formData);
   };
 
@@ -197,65 +196,26 @@ function AddModuleModal({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium">Lecturer</label>
+            <label className="block text-sm font-medium">Year</label>
             <input
               type="text"
-              name="lecturer"
-              value={formData.lecturer}
+              name="year"
+              value={formData.year || ""}
               onChange={handleChange}
               required
+              placeholder="e.g., 2023"
               className="mt-1 block w-full border rounded px-2 py-1"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium">Progress (%)</label>
-            <input
-              type="number"
-              name="value"
-              value={formData.value}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full border rounded px-2 py-1"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">
-              Topics (comma separated)
-            </label>
-            <textarea
-              name="topics"
-              placeholder="e.g., Arrays, Linked Lists, Trees"
-              onChange={handleListChange}
-              className="mt-1 block w-full border rounded px-2 py-1"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Notes</label>
-            <textarea
-              name="notes"
-              value={formData.notes}
-              onChange={handleChange}
-              className="mt-1 block w-full border rounded px-2 py-1"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Grades</label>
+            <label className="block text-sm font-medium">Semester</label>
             <input
               type="text"
-              name="grades"
-              value={formData.grades}
+              name="semester"
+              value={formData.semester || ""}
               onChange={handleChange}
-              className="mt-1 block w-full border rounded px-2 py-1"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">
-              Assignments (comma separated)
-            </label>
-            <textarea
-              name="assignments"
-              placeholder="e.g., Assignment 1 due 4/5, Assignment 2 due 4/15"
-              onChange={handleListChange}
+              required
+              placeholder="e.g., Fall"
               className="mt-1 block w-full border rounded px-2 py-1"
             />
           </div>
