@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "@/firebase-config";
-import TopicQuiz from "@/components/details/TopicQuiz"; // adjust path as needed
+import { TopicQuiz } from "@/components/details/TopicQuiz"; // adjust path as needed
 
 interface TopicDetailsProps {
   moduleId: string; // Parent module's document ID
@@ -20,7 +20,6 @@ export default function TopicDetails({
   const [error, setError] = useState("");
   const [showQuiz, setShowQuiz] = useState(false);
 
-  // Save topic notes by updating the parent module's topics array in Firestore
   const handleSave = async () => {
     setSaving(true);
     setError("");
@@ -37,6 +36,7 @@ export default function TopicDetails({
         throw new Error("Module not found");
       }
       const moduleData = moduleSnap.data();
+      // Assume topics is stored as an array of objects
       const currentTopics = moduleData.topics || [];
       const updatedTopics = currentTopics.map((t: any) =>
         t.id === topic.id ? { ...t, notes } : t
@@ -60,15 +60,14 @@ export default function TopicDetails({
         Back to Module
       </button>
       <h1 className="text-3xl font-bold">{topic.title}</h1>
-
-      {/* Topic Notes Section */}
       <div>
         <h2 className="text-2xl font-semibold mb-2">Topic Notes</h2>
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Enter your notes for this topic..."
-          className="w-full border rounded px-2 py-1 text-sm min-h-[150px]"
+          className="w-full border rounded px-2 py-1 text-sm min-h-[150px] select-text"
+          style={{ userSelect: "text" }}
         />
       </div>
       <button
@@ -79,12 +78,10 @@ export default function TopicDetails({
         {saving ? "Saving..." : "Save Notes"}
       </button>
       {error && <p className="text-red-500">{error}</p>}
-
-      {/* Quiz Section */}
       <div className="mt-6">
         <h2 className="text-2xl font-semibold">Quiz Section</h2>
         {showQuiz ? (
-          <TopicQuiz notesContent={notes} />
+          <TopicQuiz />
         ) : (
           <button
             onClick={() => setShowQuiz(true)}

@@ -2,17 +2,14 @@
 import React, { useEffect, useState } from "react";
 import { fetchAIResponse } from "@/lib/openaiClient"; // ensure this file exports fetchAIResponse properly
 
-interface TopicQuizProps {
-  notesContent: string;
-}
-
-export default function TopicQuiz({ notesContent }: TopicQuizProps) {
+export function TopicQuiz() {
   const [aiOutput, setAiOutput] = useState<string>("");
   const [questions, setQuestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Function to clean code fences from the response
   function cleanJSON(response: string): string {
+    // Remove leading/trailing ```json or ```
     let cleaned = response.trim();
     if (cleaned.startsWith("```json")) {
       cleaned = cleaned.replace(/^```json\s*/, "");
@@ -25,8 +22,7 @@ export default function TopicQuiz({ notesContent }: TopicQuizProps) {
 
   useEffect(() => {
     async function getResponse() {
-      // Pass the notesContent to fetchAIResponse so that the quiz is generated based on these notes.
-      const response = await fetchAIResponse(notesContent);
+      const response = await fetchAIResponse();
       console.log("Raw AI Output:", response); // Log the raw output
       const cleanResponse = cleanJSON(response);
       setAiOutput(cleanResponse);
@@ -40,11 +36,11 @@ export default function TopicQuiz({ notesContent }: TopicQuizProps) {
       }
     }
     getResponse();
-  }, [notesContent]);
+  }, []);
 
   return (
     <div className="w-full p-4">
-      <p>Solve this quiz based on your topic notes:</p>
+      <p>Solve this quiz!</p>
       {loading ? (
         <p className="mt-4">Loading AI response...</p>
       ) : (
