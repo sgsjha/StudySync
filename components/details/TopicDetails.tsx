@@ -81,7 +81,7 @@ export default function TopicDetails({
       <div className="mt-6">
         <h2 className="text-2xl font-semibold">Quiz Section</h2>
         {showQuiz ? (
-          <TopicQuiz />
+          <TopicQuiz notesContent={notes} />
         ) : (
           <button
             onClick={() => setShowQuiz(true)}

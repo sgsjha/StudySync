@@ -2,7 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { fetchAIResponse } from "@/lib/openaiClient"; // ensure this file exports fetchAIResponse properly
 
-export function TopicQuiz() {
+interface TopicQuizProps {
+  notesContent: string;
+}
+
+export function TopicQuiz({ notesContent }: TopicQuizProps) {
   const [aiOutput, setAiOutput] = useState<string>("");
   const [questions, setQuestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +26,7 @@ export function TopicQuiz() {
 
   useEffect(() => {
     async function getResponse() {
-      const response = await fetchAIResponse();
+      const response = await fetchAIResponse(notesContent);
       console.log("Raw AI Output:", response); // Log the raw output
       const cleanResponse = cleanJSON(response);
       setAiOutput(cleanResponse);
@@ -36,7 +40,7 @@ export function TopicQuiz() {
       }
     }
     getResponse();
-  }, []);
+  }, [notesContent]);
 
   return (
     <div className="w-full p-4">
