@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchAIResponse } from "@/lib/openaiClient"; // ensure this file exports fetchAIResponse properly
 
-export function LeaderboardSection() {
+export function TopicQuiz() {
   const [aiOutput, setAiOutput] = useState<string>("");
   const [questions, setQuestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,8 +40,7 @@ export function LeaderboardSection() {
 
   return (
     <div className="w-full p-4">
-      <h1 className="text-xl font-bold">Leaderboard</h1>
-      <p>Show rankings of friends based on progress.</p>
+      <p>Solve this quiz!</p>
       {loading ? (
         <p className="mt-4">Loading AI response...</p>
       ) : (

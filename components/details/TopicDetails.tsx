@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "@/firebase-config";
+import { TopicQuiz } from "@/components/details/TopicQuiz"; // adjust path as needed
 
 interface TopicDetailsProps {
   moduleId: string; // Parent module's document ID
@@ -17,6 +18,7 @@ export default function TopicDetails({
   const [notes, setNotes] = useState(topic.notes);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [showQuiz, setShowQuiz] = useState(false);
 
   const handleSave = async () => {
     setSaving(true);
@@ -34,6 +36,7 @@ export default function TopicDetails({
         throw new Error("Module not found");
       }
       const moduleData = moduleSnap.data();
+      // Assume topics is stored as an array of objects
       const currentTopics = moduleData.topics || [];
       const updatedTopics = currentTopics.map((t: any) =>
         t.id === topic.id ? { ...t, notes } : t
@@ -63,7 +66,8 @@ export default function TopicDetails({
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Enter your notes for this topic..."
-          className="w-full border rounded px-2 py-1 text-sm min-h-[150px]"
+          className="w-full border rounded px-2 py-1 text-sm min-h-[150px] select-text"
+          style={{ userSelect: "text" }}
         />
       </div>
       <button
@@ -76,9 +80,16 @@ export default function TopicDetails({
       {error && <p className="text-red-500">{error}</p>}
       <div className="mt-6">
         <h2 className="text-2xl font-semibold">Quiz Section</h2>
-        <div className="w-full border rounded px-4 py-6 text-center text-sm text-gray-600 dark:text-gray-300">
-          Quiz functionality coming soon...
-        </div>
+        {showQuiz ? (
+          <TopicQuiz />
+        ) : (
+          <button
+            onClick={() => setShowQuiz(true)}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+          >
+            Generate Quiz
+          </button>
+        )}
       </div>
     </div>
   );

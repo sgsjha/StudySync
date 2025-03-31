@@ -15,11 +15,12 @@ export async function fetchAIResponse(): Promise<string> {
     messages: [
       {
         role: "system",
-        content: "Make very hard 10 mcq questions about this topic, output should be in JSON, with questions and answers. DO NOT ADD ANYTHING OTHER THAN THE JSON ITSELF. BEFORE OR AFTER", // this is where we would add - make questions or whatever
+        content:
+          "Make very hard 10 mcq questions about this topic, output should be in JSON, with questions and answers. DO NOT ADD ANYTHING OTHER THAN THE JSON ITSELF. BEFORE OR AFTER",
       },
       {
         role: "user",
-        content: "orthopedics", // need to add lecture slides here
+        content: "python",
       },
     ],
   });
