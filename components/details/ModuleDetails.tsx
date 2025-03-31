@@ -1,15 +1,16 @@
 "use client";
 import React, { useState } from "react";
-import TopicDetails from "./TopicDetails"; // adjust path if needed
+import { doc, updateDoc } from "firebase/firestore";
+import { auth, db } from "@/firebase-config";
+import TopicDetails from "../details/TopicDetails";
 
-// Define the module type (or import from a shared types file)
 interface ModuleType {
   id: string;
   label: string;
   lecturer: string;
   year?: string;
   semester?: string;
-  topics: string[];
+  topics: { id: string; title: string; notes: string }[];
   notes: string;
   grades: string;
   assignments: string[];
@@ -22,49 +23,95 @@ interface ModuleDetailsProps {
 }
 
 export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
-  // Editable state for module info
   const [moduleInfo, setModuleInfo] = useState<ModuleType>(module);
   const [newTopic, setNewTopic] = useState("");
+  const [selectedTopic, setSelectedTopic] = useState<{
+    id: string;
+    title: string;
+    notes: string;
+  } | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
-  // Local state for selected topic details view
-  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+  // Helper to get the Firestore document reference for this module.
+  const getModuleDocRef = () => {
+    const user = auth.currentUser;
+    if (!user) return null;
+    return doc(db, "users", user.uid, "modules", moduleInfo.id);
+  };
 
-  // If a topic is selected, show TopicDetails
+  // Save basic module info (name, lecturer, year, semester)
+  const handleSaveChanges = async () => {
+    setSaving(true);
+    const moduleRef = getModuleDocRef();
+    if (moduleRef) {
+      try {
+        await updateDoc(moduleRef, {
+          label: moduleInfo.label,
+          lecturer: moduleInfo.lecturer,
+          year: moduleInfo.year,
+          semester: moduleInfo.semester,
+        });
+        console.log("Module info updated.");
+      } catch (err: any) {
+        console.error("Error updating module info:", err);
+        setError(err.message || "Error updating module info.");
+      }
+    }
+    setSaving(false);
+  };
+
+  // Add a new topic and update Firestore
+  const handleAddTopic = async () => {
+    if (newTopic.trim()) {
+      const newTopicObj = {
+        id: Date.now().toString(),
+        title: newTopic.trim(),
+        notes: "",
+      };
+      const updatedTopics = [...moduleInfo.topics, newTopicObj];
+      setModuleInfo((prev) => ({ ...prev, topics: updatedTopics }));
+      setNewTopic("");
+      const moduleRef = getModuleDocRef();
+      if (moduleRef) {
+        try {
+          await updateDoc(moduleRef, { topics: updatedTopics });
+          console.log("Topics updated.");
+        } catch (err: any) {
+          console.error("Error updating topics:", err);
+          setError(err.message || "Error updating topics.");
+        }
+      }
+    }
+  };
+
+  // Save module-level notes and update Firestore
+  const handleSaveNotes = async () => {
+    const moduleRef = getModuleDocRef();
+    if (moduleRef) {
+      try {
+        await updateDoc(moduleRef, { notes: moduleInfo.notes });
+        console.log("Module notes updated.");
+      } catch (err: any) {
+        console.error("Error updating notes:", err);
+        setError(err.message || "Error updating notes.");
+      }
+    }
+  };
+
+  // If a topic is selected, show the TopicDetails view
   if (selectedTopic) {
     return (
       <TopicDetails
+        moduleId={moduleInfo.id}
         topic={selectedTopic}
         onBack={() => setSelectedTopic(null)}
       />
     );
   }
 
-  // Handlers for updating module info
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setModuleInfo((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // Add a new topic to the list
-  const handleAddTopic = () => {
-    if (newTopic.trim()) {
-      setModuleInfo((prev) => ({
-        ...prev,
-        topics: [...prev.topics, newTopic.trim()],
-      }));
-      setNewTopic("");
-    }
-  };
-
-  // Save changes (currently just logs; integrate Firestore update as needed)
-  const handleSaveChanges = () => {
-    console.log("Saving module info...", moduleInfo);
-    // TODO: update Firestore with new module info.
-  };
-
   return (
     <div className="p-4 w-full h-full space-y-6 dark:text-neutral-100 text-neutral-800">
-      {/* Back Button */}
       <button
         onClick={onBack}
         className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
@@ -82,7 +129,9 @@ export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
               type="text"
               name="label"
               value={moduleInfo.label}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                setModuleInfo((prev) => ({ ...prev, label: e.target.value }))
+              }
               className="mt-1 block w-full border rounded px-2 py-1"
             />
           </div>
@@ -92,7 +141,9 @@ export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
               type="text"
               name="lecturer"
               value={moduleInfo.lecturer}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                setModuleInfo((prev) => ({ ...prev, lecturer: e.target.value }))
+              }
               className="mt-1 block w-full border rounded px-2 py-1"
             />
           </div>
@@ -103,7 +154,9 @@ export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
                 type="text"
                 name="year"
                 value={moduleInfo.year || ""}
-                onChange={handleInputChange}
+                onChange={(e) =>
+                  setModuleInfo((prev) => ({ ...prev, year: e.target.value }))
+                }
                 className="mt-1 block w-full border rounded px-2 py-1"
               />
             </div>
@@ -113,16 +166,22 @@ export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
                 type="text"
                 name="semester"
                 value={moduleInfo.semester || ""}
-                onChange={handleInputChange}
+                onChange={(e) =>
+                  setModuleInfo((prev) => ({
+                    ...prev,
+                    semester: e.target.value,
+                  }))
+                }
                 className="mt-1 block w-full border rounded px-2 py-1"
               />
             </div>
           </div>
           <button
             onClick={handleSaveChanges}
+            disabled={saving}
             className="mt-2 px-4 py-2 bg-green-500 text-white rounded"
           >
-            Save Changes
+            {saving ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </section>
@@ -133,13 +192,13 @@ export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
         <div className="space-y-2">
           {moduleInfo.topics.length > 0 ? (
             <ul className="list-disc ml-6">
-              {moduleInfo.topics.map((topic, idx) => (
+              {moduleInfo.topics.map((topic) => (
                 <li
-                  key={idx}
+                  key={topic.id}
                   className="text-sm cursor-pointer hover:underline"
                   onClick={() => setSelectedTopic(topic)}
                 >
-                  {topic}
+                  {topic.title}
                 </li>
               ))}
             </ul>
@@ -164,7 +223,7 @@ export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
         </div>
       </section>
 
-      {/* Notes Section */}
+      {/* Module Notes Section */}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Module Notes</h2>
         <textarea
@@ -175,6 +234,12 @@ export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
           placeholder="Write your notes for the module here..."
           className="w-full border rounded px-2 py-1 text-sm min-h-[100px]"
         />
+        <button
+          onClick={handleSaveNotes}
+          className="mt-2 px-4 py-2 bg-green-500 text-white rounded"
+        >
+          Save Notes
+        </button>
       </section>
 
       {/* Quiz Section Placeholder */}

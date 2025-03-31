@@ -11,7 +11,7 @@ interface ModuleType {
   label: string;
   value: number;
   lecturer: string;
-  topics: string[];
+  topics: { id: string; title: string; notes: string }[];
   notes: string;
   grades: string;
   assignments: string[];
