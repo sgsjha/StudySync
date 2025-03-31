@@ -84,7 +84,10 @@ export default function TopicDetails({
           <TopicQuiz notesContent={notes} />
         ) : (
           <button
-            onClick={() => setShowQuiz(true)}
+            onClick={() => {
+              handleSave();
+              setShowQuiz(true);
+            }}
             className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
           >
             Generate Quiz
