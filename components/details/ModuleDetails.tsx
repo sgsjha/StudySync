@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
+import TopicDetails from "./TopicDetails"; // adjust path if needed
 
+// Define the module type (or import from a shared types file)
 interface ModuleType {
   id: string;
   label: string;
@@ -24,6 +26,19 @@ export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
   const [moduleInfo, setModuleInfo] = useState<ModuleType>(module);
   const [newTopic, setNewTopic] = useState("");
 
+  // Local state for selected topic details view
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+
+  // If a topic is selected, show TopicDetails
+  if (selectedTopic) {
+    return (
+      <TopicDetails
+        topic={selectedTopic}
+        onBack={() => setSelectedTopic(null)}
+      />
+    );
+  }
+
   // Handlers for updating module info
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -41,10 +56,10 @@ export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
     }
   };
 
-  // Save changes (here, simply log them; integrate with Firestore as needed)
+  // Save changes (currently just logs; integrate Firestore update as needed)
   const handleSaveChanges = () => {
     console.log("Saving module info...", moduleInfo);
-    // TODO: call an update function to persist changes in Firestore.
+    // TODO: update Firestore with new module info.
   };
 
   return (
@@ -87,7 +102,7 @@ export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
               <input
                 type="text"
                 name="year"
-                value={moduleInfo.year}
+                value={moduleInfo.year || ""}
                 onChange={handleInputChange}
                 className="mt-1 block w-full border rounded px-2 py-1"
               />
@@ -97,7 +112,7 @@ export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
               <input
                 type="text"
                 name="semester"
-                value={moduleInfo.semester}
+                value={moduleInfo.semester || ""}
                 onChange={handleInputChange}
                 className="mt-1 block w-full border rounded px-2 py-1"
               />
@@ -119,7 +134,11 @@ export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
           {moduleInfo.topics.length > 0 ? (
             <ul className="list-disc ml-6">
               {moduleInfo.topics.map((topic, idx) => (
-                <li key={idx} className="text-sm">
+                <li
+                  key={idx}
+                  className="text-sm cursor-pointer hover:underline"
+                  onClick={() => setSelectedTopic(topic)}
+                >
                   {topic}
                 </li>
               ))}
@@ -147,18 +166,18 @@ export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
 
       {/* Notes Section */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Notes</h2>
+        <h2 className="text-2xl font-semibold">Module Notes</h2>
         <textarea
           value={moduleInfo.notes}
           onChange={(e) =>
             setModuleInfo((prev) => ({ ...prev, notes: e.target.value }))
           }
-          placeholder="Write your notes here..."
+          placeholder="Write your notes for the module here..."
           className="w-full border rounded px-2 py-1 text-sm min-h-[100px]"
         />
       </section>
 
-      {/* Quiz Section */}
+      {/* Quiz Section Placeholder */}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Quiz Section</h2>
         <div className="w-full border rounded px-4 py-6 text-center text-sm text-gray-600 dark:text-gray-300">

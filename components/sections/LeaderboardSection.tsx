@@ -35,7 +35,7 @@ export function LeaderboardSection() {
         setLoading(false);
       }
     }
-    getResponse();
+    //getResponse(); uncomment this to make AI work
   }, []);
 
   return (
