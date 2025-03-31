@@ -1,6 +1,6 @@
 import { OpenAI } from "openai";
 
-export async function fetchAIResponse(): Promise<string> {
+export async function fetchAIResponse(notesContent: string): Promise<string> {
   // Instantiate the OpenAI client using your environment variables.
   // We add dangerouslyAllowBrowser: true to bypass browser restrictions.
   const openai = new OpenAI({
@@ -20,7 +20,7 @@ export async function fetchAIResponse(): Promise<string> {
       },
       {
         role: "user",
-        content: "python",
+        content: notesContent,
       },
     ],
   });
