@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "@/firebase-config";
 import { TopicQuiz } from "@/components/details/TopicQuiz"; // adjust path as needed
@@ -19,6 +19,7 @@ export default function TopicDetails({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [showQuiz, setShowQuiz] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false);
 
   const handleSave = async () => {
     setSaving(true);
@@ -66,34 +67,39 @@ export default function TopicDetails({
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Enter your notes for this topic..."
-          className="w-full border rounded px-2 py-1 text-sm min-h-[150px] select-text"
+          className="w-full border rounded px-2 py-1 text-sm min-h-[150px] select-text dark:bg-neutral-800 dark:border-neutral-700"
           style={{ userSelect: "text" }}
         />
       </div>
-      <button
-        onClick={handleSave}
-        disabled={saving}
-        className="px-4 py-2 bg-green-500 text-white rounded"
-      >
-        {saving ? "Saving..." : "Save Notes"}
-      </button>
-      {error && <p className="text-red-500">{error}</p>}
-      <div className="mt-6">
-        <h2 className="text-2xl font-semibold">Quiz Section</h2>
-        {showQuiz ? (
-          <TopicQuiz notesContent={notes} />
-        ) : (
+      <div className="flex gap-4">
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300"
+        >
+          {saving ? "Saving..." : "Save Notes"}
+        </button>
+
+        {!showQuiz && (
           <button
             onClick={() => {
               handleSave();
               setShowQuiz(true);
             }}
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           >
-            Generate Quiz
+            Take Quiz
           </button>
         )}
       </div>
+
+      {error && <p className="text-red-500">{error}</p>}
+
+      {showQuiz && (
+        <div className="mt-6 border rounded-lg p-4 bg-white dark:bg-neutral-900">
+          <TopicQuiz notesContent={notes} />
+        </div>
+      )}
     </div>
   );
 }
