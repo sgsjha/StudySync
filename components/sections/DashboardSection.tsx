@@ -148,12 +148,6 @@ export function DashboardSection() {
         description="You excel in these!"
         header={<ModulePerformance type="strong" modules={modules} />}
       />
-      <BentoGridItem
-        title="Average Study Time Leaderboard"
-        description="See top students"
-        header={<Leaderboard />}
-        className="md:col-span-2"
-      />
     </div>
   );
 }
