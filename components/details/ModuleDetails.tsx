@@ -12,7 +12,6 @@ interface Assignment {
   dueDate: string;
 }
 
-// build fix 1
 interface ModuleType {
   id: string;
   label: string;
@@ -36,7 +35,6 @@ interface ModuleType {
   year?: string;
   semester?: string;
 }
-
 interface ModuleDetailsProps {
   module: ModuleType;
   onBack: () => void;
