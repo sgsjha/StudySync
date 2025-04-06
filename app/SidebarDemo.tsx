@@ -20,6 +20,7 @@ import { StudySection } from "@/components/sections/StudySection";
 import { ModulesSection } from "@/components/sections/ModulesSection";
 import { LeaderboardSection } from "@/components/sections/LeaderboardSection";
 import { StopwatchProvider } from "./contexts/StopwatchContext";
+import RevisionSection from "@/components/sections/RevisionSection";
 
 interface SidebarDemoProps {
   onLogout: () => void;
@@ -49,8 +50,8 @@ export function SidebarDemo({ onLogout }: SidebarDemoProps) {
       icon: <IconListCheck className="h-5 w-5" />,
     },
     {
-      label: "Leaderboard",
-      section: "Leaderboard",
+      label: "Revision",
+      section: "Revision",
       icon: <IconUsers className="h-5 w-5" />,
     },
   ];
@@ -108,7 +109,7 @@ export function SidebarDemo({ onLogout }: SidebarDemoProps) {
           {activeSection === "Dashboard" && <DashboardSection />}
           {activeSection === "Study" && <StudySection />}
           {activeSection === "Modules" && <ModulesSection />}
-          {activeSection === "Leaderboard" && <LeaderboardSection />}
+          {activeSection === "Revision" && <RevisionSection />}
         </StopwatchProvider>
       </div>
     </div>

@@ -1,28 +1,39 @@
 "use client";
 import React, { useState } from "react";
 
-interface PracticeExamModalProps {
+export interface ModuleOption {
+  id: string;
+  label: string;
+}
+
+interface UpdatedPracticeExamModalProps {
+  modules: ModuleOption[];
   onClose: () => void;
   onSubmit: (
-    examType: string,
+    selectedModuleId: string,
+    examType: "MCQ" | "Written",
     numQuestions: number,
     timeAllowed: number,
     totalMarks: number
   ) => void;
 }
 
-export default function PracticeExamModal({
+export default function UpdatedPracticeExamModal({
+  modules,
   onClose,
   onSubmit,
-}: PracticeExamModalProps) {
-  const [examType, setExamType] = useState("MCQ");
+}: UpdatedPracticeExamModalProps) {
+  const [selectedModuleId, setSelectedModuleId] = useState(
+    modules[0]?.id || ""
+  );
+  const [examType, setExamType] = useState<"MCQ" | "Written">("MCQ");
   const [numQuestions, setNumQuestions] = useState(10);
-  const [timeAllowed, setTimeAllowed] = useState(60); // minutes
+  const [timeAllowed, setTimeAllowed] = useState(60);
   const [totalMarks, setTotalMarks] = useState(100);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(examType, numQuestions, timeAllowed, totalMarks);
+    onSubmit(selectedModuleId, examType, numQuestions, timeAllowed, totalMarks);
   };
 
   return (
@@ -31,10 +42,24 @@ export default function PracticeExamModal({
         <h3 className="text-xl font-bold mb-4">Create Practice Exam</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
+            <label className="block text-sm font-medium">Select Module</label>
+            <select
+              value={selectedModuleId}
+              onChange={(e) => setSelectedModuleId(e.target.value)}
+              className="mt-1 block w-full border rounded px-2 py-1"
+            >
+              {modules.map((module) => (
+                <option key={module.id} value={module.id}>
+                  {module.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
             <label className="block text-sm font-medium">Exam Type</label>
             <select
               value={examType}
-              onChange={(e) => setExamType(e.target.value)}
+              onChange={(e) => setExamType(e.target.value as "MCQ" | "Written")}
               className="mt-1 block w-full border rounded px-2 py-1"
             >
               <option value="MCQ">MCQ</option>

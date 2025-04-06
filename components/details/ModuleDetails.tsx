@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "@/firebase-config";
 import TopicDetails from "../details/TopicDetails";
-import RevisionSection from "./RevisionSection";
+import RevisionSection from "../sections/RevisionSection";
 
 interface Assignment {
   id: string;
@@ -364,14 +364,6 @@ export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
           >
             Add Assignment
           </button>
-        </div>
-      </section>
-
-      {/* Revision Section (Practice Exams) */}
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Revision Quizzes</h2>
-        <div className="w-full border rounded px-4 py-6 text-center text-sm text-gray-600 dark:text-gray-300">
-          <RevisionSection />
         </div>
       </section>
 
