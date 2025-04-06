@@ -12,18 +12,29 @@ interface Assignment {
   dueDate: string;
 }
 
+// build fix 1
 interface ModuleType {
   id: string;
   label: string;
+  value: number; // stored progress (we will compute it)
   lecturer: string;
-  year?: string;
-  semester?: string;
-  topics: { id: string; title: string; notes: string }[];
-  assignments: Assignment[];
+  topics: {
+    id: string;
+    title: string;
+    notes: string;
+    quizScore?: number;
+    quizTotal?: number;
+  }[];
   notes: string;
   grades: string;
-  assignmentsText?: string;
-  value: number;
+  assignments: {
+    id: string;
+    title: string;
+    weightage: number;
+    dueDate: string;
+  }[];
+  year?: string;
+  semester?: string;
 }
 
 interface ModuleDetailsProps {

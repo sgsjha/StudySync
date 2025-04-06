@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { BentoGridItem } from "../ui/bento-grid";
 import { StudyHoursChart } from "../charts/StudyHoursChart";
 import { ModulePerformance } from "../widgets/ModulePerformance";
@@ -63,8 +63,19 @@ export function DashboardSection() {
     fetchModules();
   }, []);
 
-  if (loading) return <p>Loading dashboard...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (loading)
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        <p className="text-emerald-600 text-lg">Loading dashboard...</p>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        <p className="text-red-500 text-lg">{error}</p>
+      </div>
+    );
 
   // Compute progress for each module from its topics' quiz scores.
   const modulesWithProgress = modules.map((mod) => {
@@ -106,53 +117,75 @@ export function DashboardSection() {
       <BentoGridItem
         title="Current Streak"
         description="2 days"
-        className="md:row-span-3"
+        className="md:row-span-3 bg-white dark:bg-gray-800 border-emerald-100 dark:border-emerald-900/30 hover:border-emerald-200 dark:hover:border-emerald-800/50"
       />
       <BentoGridItem
         title="Longest Streak"
         description="6 days"
-        className="md:row-span-3"
+        className="md:row-span-3 bg-white dark:bg-gray-800 border-emerald-100 dark:border-emerald-900/30 hover:border-emerald-200 dark:hover:border-emerald-800/50"
       />
-      <BentoGridItem title="Total Study Time" description="39h 20m" />
-      <BentoGridItem title="Avg. Session Length" description="2h 34m" />
+      <BentoGridItem
+        title="Total Study Time"
+        description="39h 20m"
+        className="bg-white dark:bg-gray-800 border-emerald-100 dark:border-emerald-900/30 hover:border-emerald-200 dark:hover:border-emerald-800/50"
+      />
+      <BentoGridItem
+        title="Avg. Session Length"
+        description="2h 34m"
+        className="bg-white dark:bg-gray-800 border-emerald-100 dark:border-emerald-900/30 hover:border-emerald-200 dark:hover:border-emerald-800/50"
+      />
       <BentoGridItem
         title="Hours of Study"
         description="Study patterns over time"
         header={<StudyHoursChart />}
+        className="bg-white dark:bg-gray-800 border-emerald-100 dark:border-emerald-900/30 hover:border-emerald-200 dark:hover:border-emerald-800/50"
       />
       <BentoGridItem
         title="Next Assignments"
         description="Next 3 due assignments"
         header={
-          <div className="text-sm text-neutral-700 dark:text-neutral-200">
+          <div className="text-sm text-gray-700 dark:text-gray-200">
             {nextAssignments.length > 0 ? (
               nextAssignments.map((assignment, index) => (
-                <p key={index}>
-                  <strong>{assignment.moduleLabel}:</strong> {assignment.title}{" "}
-                  - Due: {new Date(assignment.dueDate).toLocaleString()}
+                <p
+                  key={index}
+                  className="mb-2 p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-md"
+                >
+                  <strong className="text-emerald-600 dark:text-emerald-400">
+                    {assignment.moduleLabel}:
+                  </strong>{" "}
+                  {assignment.title}{" "}
+                  <span className="block text-xs mt-1 text-gray-500 dark:text-gray-400">
+                    Due: {new Date(assignment.dueDate).toLocaleString()}
+                  </span>
                 </p>
               ))
             ) : (
-              <p>No assignments available.</p>
+              <p className="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-md text-center">
+                No assignments available.
+              </p>
             )}
           </div>
         }
+        className="bg-white dark:bg-gray-800 border-emerald-100 dark:border-emerald-900/30 hover:border-emerald-200 dark:hover:border-emerald-800/50"
       />
       <BentoGridItem
         title="Weakest Modules"
         description="Improve these topics"
         header={<ModulePerformance type="weak" modules={modules} />}
+        className="bg-white dark:bg-gray-800 border-emerald-100 dark:border-emerald-900/30 hover:border-emerald-200 dark:hover:border-emerald-800/50"
       />
       <BentoGridItem
         title="Strongest Modules"
         description="You excel in these!"
         header={<ModulePerformance type="strong" modules={modules} />}
+        className="bg-white dark:bg-gray-800 border-emerald-100 dark:border-emerald-900/30 hover:border-emerald-200 dark:hover:border-emerald-800/50"
       />
       <BentoGridItem
         title="Average Study Time Leaderboard"
         description="See top students"
         header={<Leaderboard />}
-        className="md:col-span-2"
+        className="md:col-span-2 bg-white dark:bg-gray-800 border-emerald-100 dark:border-emerald-900/30 hover:border-emerald-200 dark:hover:border-emerald-800/50"
       />
     </div>
   );
