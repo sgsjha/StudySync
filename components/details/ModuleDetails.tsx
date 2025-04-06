@@ -1,8 +1,16 @@
 "use client";
 import React, { useState } from "react";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "@/firebase-config";
 import TopicDetails from "../details/TopicDetails";
+import RevisionSection from "./RevisionSection";
+
+interface Assignment {
+  id: string;
+  title: string;
+  weightage: number;
+  dueDate: string;
+}
 
 interface ModuleType {
   id: string;
@@ -11,9 +19,10 @@ interface ModuleType {
   year?: string;
   semester?: string;
   topics: { id: string; title: string; notes: string }[];
+  assignments: Assignment[];
   notes: string;
   grades: string;
-  assignments: string[];
+  assignmentsText?: string;
   value: number;
 }
 
@@ -30,10 +39,15 @@ export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
     title: string;
     notes: string;
   } | null>(null);
+  // State for new assignment form:
+  const [newAssignmentTitle, setNewAssignmentTitle] = useState("");
+  const [newAssignmentWeightage, setNewAssignmentWeightage] =
+    useState<number>(0);
+  const [newAssignmentDueDate, setNewAssignmentDueDate] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  // Helper to get the Firestore document reference for this module.
+  // Helper: get the Firestore document reference for this module.
   const getModuleDocRef = () => {
     const user = auth.currentUser;
     if (!user) return null;
@@ -81,6 +95,52 @@ export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
           console.error("Error updating topics:", err);
           setError(err.message || "Error updating topics.");
         }
+      }
+    }
+  };
+
+  // Add a new assignment and update Firestore
+  const handleAddAssignment = async () => {
+    if (newAssignmentTitle.trim() && newAssignmentDueDate.trim()) {
+      const newAssignment: Assignment = {
+        id: Date.now().toString(),
+        title: newAssignmentTitle.trim(),
+        weightage: newAssignmentWeightage,
+        dueDate: newAssignmentDueDate,
+      };
+      const updatedAssignments = [...moduleInfo.assignments, newAssignment];
+      setModuleInfo((prev) => ({ ...prev, assignments: updatedAssignments }));
+      // Reset assignment form fields
+      setNewAssignmentTitle("");
+      setNewAssignmentWeightage(0);
+      setNewAssignmentDueDate("");
+      const moduleRef = getModuleDocRef();
+      if (moduleRef) {
+        try {
+          await updateDoc(moduleRef, { assignments: updatedAssignments });
+          console.log("Assignments updated.");
+        } catch (err: any) {
+          console.error("Error updating assignments:", err);
+          setError(err.message || "Error updating assignments.");
+        }
+      }
+    }
+  };
+
+  // Remove an assignment when its checkbox is toggled
+  const handleRemoveAssignment = async (assignmentId: string) => {
+    const updatedAssignments = moduleInfo.assignments.filter(
+      (a) => a.id !== assignmentId
+    );
+    setModuleInfo((prev) => ({ ...prev, assignments: updatedAssignments }));
+    const moduleRef = getModuleDocRef();
+    if (moduleRef) {
+      try {
+        await updateDoc(moduleRef, { assignments: updatedAssignments });
+        console.log("Assignment removed successfully.");
+      } catch (err: any) {
+        console.error("Error removing assignment:", err);
+        setError(err.message || "Error removing assignment.");
       }
     }
   };
@@ -223,32 +283,90 @@ export default function ModuleDetails({ module, onBack }: ModuleDetailsProps) {
         </div>
       </section>
 
-      {/* Module Notes Section */}
+      {/* Assignments Section */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Module Notes</h2>
-        <textarea
-          value={moduleInfo.notes}
-          onChange={(e) =>
-            setModuleInfo((prev) => ({ ...prev, notes: e.target.value }))
-          }
-          placeholder="Write your notes for the module here..."
-          className="w-full border rounded px-2 py-1 text-sm min-h-[100px]"
-        />
-        <button
-          onClick={handleSaveNotes}
-          className="mt-2 px-4 py-2 bg-green-500 text-white rounded"
-        >
-          Save Notes
-        </button>
-      </section>
-
-      {/* Quiz Section Placeholder */}
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Quiz Section</h2>
-        <div className="w-full border rounded px-4 py-6 text-center text-sm text-gray-600 dark:text-gray-300">
-          Quiz functionality coming soon...
+        <h2 className="text-2xl font-semibold">Assignments</h2>
+        {moduleInfo.assignments && moduleInfo.assignments.length > 0 ? (
+          <ul className="space-y-2">
+            {moduleInfo.assignments.map((assignment) => (
+              <li
+                key={assignment.id}
+                className="border p-2 rounded flex justify-between items-center"
+              >
+                <div>
+                  <p className="font-semibold">{assignment.title}</p>
+                  <p className="text-sm">
+                    Weightage: {assignment.weightage} | Due:{" "}
+                    {assignment.dueDate}
+                  </p>
+                </div>
+                <div>
+                  <input
+                    type="checkbox"
+                    onChange={() => handleRemoveAssignment(assignment.id)}
+                    className="cursor-pointer"
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm italic text-gray-500">
+            No assignments added yet.
+          </p>
+        )}
+        <div className="mt-4 space-y-2 border p-4 rounded">
+          <h3 className="text-lg font-medium">Add New Assignment</h3>
+          <div>
+            <label className="block text-sm">Title</label>
+            <input
+              type="text"
+              value={newAssignmentTitle}
+              onChange={(e) => setNewAssignmentTitle(e.target.value)}
+              className="mt-1 block w-full border rounded px-2 py-1 text-sm"
+              placeholder="Assignment title"
+            />
+          </div>
+          <div>
+            <label className="block text-sm">Weightage (%)</label>
+            <input
+              type="number"
+              value={newAssignmentWeightage}
+              onChange={(e) =>
+                setNewAssignmentWeightage(Number(e.target.value))
+              }
+              className="mt-1 block w-full border rounded px-2 py-1 text-sm"
+              placeholder="e.g., 20"
+              min={0}
+            />
+          </div>
+          <div>
+            <label className="block text-sm">Due Date & Time</label>
+            <input
+              type="datetime-local"
+              value={newAssignmentDueDate}
+              onChange={(e) => setNewAssignmentDueDate(e.target.value)}
+              className="mt-1 block w-full border rounded px-2 py-1 text-sm"
+            />
+          </div>
+          <button
+            onClick={handleAddAssignment}
+            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded text-sm"
+          >
+            Add Assignment
+          </button>
         </div>
       </section>
+
+      {/* Revision Section (Practice Exams) */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-semibold">Revision Quizzes</h2>
+        <div className="w-full border rounded px-4 py-6 text-center text-sm text-gray-600 dark:text-gray-300">
+          <RevisionSection />
+        </div>
+      </section>
+
+      {error && <p className="text-red-500">{error}</p>}
     </div>
   );
 }

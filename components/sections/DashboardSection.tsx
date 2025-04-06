@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BentoGridItem } from "../ui/bento-grid";
 import { StudyHoursChart } from "../charts/StudyHoursChart";
 import { ModulePerformance } from "../widgets/ModulePerformance";
@@ -21,7 +21,12 @@ interface ModuleType {
   }[];
   notes: string;
   grades: string;
-  assignments: string[];
+  assignments: {
+    id: string;
+    title: string;
+    weightage: number;
+    dueDate: string;
+  }[];
   year?: string;
   semester?: string;
 }
@@ -61,6 +66,41 @@ export function DashboardSection() {
   if (loading) return <p>Loading dashboard...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
+  // Compute progress for each module from its topics' quiz scores.
+  const modulesWithProgress = modules.map((mod) => {
+    const totalScore = mod.topics.reduce(
+      (acc, topic) => acc + (topic.quizScore || 0),
+      0
+    );
+    const totalQuestions = mod.topics.reduce(
+      (acc, topic) => acc + (topic.quizTotal || 0),
+      0
+    );
+    const progress =
+      totalQuestions > 0 ? Math.floor((totalScore / totalQuestions) * 100) : 0;
+    return { label: mod.label, value: progress };
+  });
+
+  // Sort modules for strongest and weakest performance
+  const sortedStrongModules = modulesWithProgress
+    .slice()
+    .sort((a, b) => b.value - a.value)
+    .slice(0, Math.min(3, modulesWithProgress.length));
+  const sortedWeakModules = modulesWithProgress
+    .slice()
+    .sort((a, b) => a.value - b.value)
+    .slice(0, Math.min(3, modulesWithProgress.length));
+
+  // Gather assignments along with their module title
+  const allAssignments = modules.flatMap((mod) =>
+    (mod.assignments || []).map((assignment) => ({
+      ...assignment,
+      moduleLabel: mod.label,
+    }))
+  );
+  // Take the first 3 assignments (you can sort these by dueDate if desired)
+  const nextAssignments = allAssignments.slice(0, 3);
+
   return (
     <div className="grid md:grid-cols-2 gap-4 w-full px-4 pb-10">
       <BentoGridItem
@@ -85,9 +125,16 @@ export function DashboardSection() {
         description="Next 3 due assignments"
         header={
           <div className="text-sm text-neutral-700 dark:text-neutral-200">
-            <p>1. COMP 109 Test on 28/03</p>
-            <p>2. COMP 111: Assignment 2 due on 30/03</p>
-            <p>3. COMP 116: Assignment 1 due on 31/03</p>
+            {nextAssignments.length > 0 ? (
+              nextAssignments.map((assignment, index) => (
+                <p key={index}>
+                  <strong>{assignment.moduleLabel}:</strong> {assignment.title}{" "}
+                  - Due: {new Date(assignment.dueDate).toLocaleString()}
+                </p>
+              ))
+            ) : (
+              <p>No assignments available.</p>
+            )}
           </div>
         }
       />
