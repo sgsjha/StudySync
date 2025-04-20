@@ -105,16 +105,16 @@ export function DashboardSection() {
     <div className="grid md:grid-cols-2 gap-4 w-full px-4 pb-10">
       <BentoGridItem
         title="Current Streak"
-        description="2 days"
+        description="0 days"
         className="md:row-span-3"
       />
       <BentoGridItem
         title="Longest Streak"
-        description="6 days"
+        description="0 days"
         className="md:row-span-3"
       />
-      <BentoGridItem title="Total Study Time" description="39h 20m" />
-      <BentoGridItem title="Avg. Session Length" description="2h 34m" />
+      <BentoGridItem title="Total Study Time" description="No Data Yet" />
+      <BentoGridItem title="Avg. Session Length" description="No Data Yet" />
       <BentoGridItem
         title="Hours of Study"
         description="Study patterns over time"

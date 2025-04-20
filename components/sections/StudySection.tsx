@@ -6,6 +6,10 @@ import {
 } from "../../app/contexts/StopwatchContext";
 import Clock from "react-clock";
 import "react-clock/dist/Clock.css";
+import { auth, db } from "@/firebase-config";
+import { collection, addDoc } from "firebase/firestore";
+import { useEffect } from "react";
+import { useState } from "react";
 
 export function StudySection() {
   const { isRunning, elapsed, start, pause, reset } = useStopwatch();
@@ -22,6 +26,27 @@ export function StudySection() {
     )}:${String(seconds).padStart(2, "0")}`;
   }
 
+  // Save session on pause
+  const handlePauseAndSave = async () => {
+    pause();
+    const user = auth.currentUser;
+    if (!user) {
+      console.error("User not authenticated.");
+      return;
+    }
+
+    try {
+      const sessionRef = collection(db, "users", user.uid, "studySessions");
+      await addDoc(sessionRef, {
+        duration: elapsed,
+        timestamp: Date.now(),
+      });
+      console.log("Study session saved.");
+    } catch (err) {
+      console.error("Error saving study session:", err);
+    }
+  };
+
   return (
     <StopwatchProvider>
       <div className="flex flex-col items-center justify-center w-full h-full text-center p-4 lg:space-y-15 space-y-6">
@@ -37,7 +62,7 @@ export function StudySection() {
           {/* Controls */}
           <div className="flex space-x-4">
             <button
-              onClick={isRunning ? pause : start}
+              onClick={isRunning ? handlePauseAndSave : start}
               className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded"
             >
               {isRunning ? "Pause" : "Start"}
@@ -58,3 +83,29 @@ export function StudySection() {
     </StopwatchProvider>
   );
 }
+
+/**
+ * 
+ * 
+ * // Save session on pause
+  const handlePauseAndSave = async () => {
+    pause();
+    const user = auth.currentUser;
+    if (!user) {
+      console.error("User not authenticated.");
+      return;
+    }
+
+    try {
+      const sessionRef = collection(db, "users", user.uid, "studySessions");
+      await addDoc(sessionRef, {
+        duration: elapsed,
+        timestamp: Date.now(),
+      });
+      console.log("Study session saved.");
+    } catch (err) {
+      console.error("Error saving study session:", err);
+    }
+  };
+
+ */
