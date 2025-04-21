@@ -8,13 +8,11 @@ import Clock from "react-clock";
 import "react-clock/dist/Clock.css";
 import { auth, db } from "@/firebase-config";
 import { collection, addDoc } from "firebase/firestore";
-import { useEffect } from "react";
-import { useState } from "react";
 
 export function StudySection() {
   const { isRunning, elapsed, start, pause, reset } = useStopwatch();
 
-  // Format ms -> HH:MM:SS
+  // Format ms → HH:MM:SS
   function formatTime(ms: number) {
     const totalSec = Math.floor(ms / 1000);
     const hours = Math.floor(totalSec / 3600);
@@ -26,9 +24,10 @@ export function StudySection() {
     )}:${String(seconds).padStart(2, "0")}`;
   }
 
-  // Save session on pause
-  const handlePauseAndSave = async () => {
-    pause();
+  // Save session to Firestore and reset timer
+  const handleSaveAndReset = async () => {
+    if (elapsed === 0) return; // Don’t save if no time has passed
+
     const user = auth.currentUser;
     if (!user) {
       console.error("User not authenticated.");
@@ -42,6 +41,7 @@ export function StudySection() {
         timestamp: Date.now(),
       });
       console.log("Study session saved.");
+      reset();
     } catch (err) {
       console.error("Error saving study session:", err);
     }
@@ -53,25 +53,22 @@ export function StudySection() {
         <h1 className="text-xl font-semibold lg:text-2xl">Study Time</h1>
 
         <div className="flex flex-col items-center space-y-4 lg:scale-125">
-          {/* Analog stopwatch: pass new Date(elapsed) */}
           <Clock value={new Date(elapsed)} size={200} renderNumbers />
 
-          {/* Digital stopwatch */}
           <div className="text-6xl font-bold">{formatTime(elapsed)}</div>
 
-          {/* Controls */}
           <div className="flex space-x-4">
             <button
-              onClick={isRunning ? handlePauseAndSave : start}
+              onClick={isRunning ? pause : start}
               className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded"
             >
               {isRunning ? "Pause" : "Start"}
             </button>
             <button
-              onClick={reset}
-              className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded"
+              onClick={handleSaveAndReset}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
             >
-              Reset
+              Save and Reset
             </button>
           </div>
         </div>
@@ -83,29 +80,3 @@ export function StudySection() {
     </StopwatchProvider>
   );
 }
-
-/**
- * 
- * 
- * // Save session on pause
-  const handlePauseAndSave = async () => {
-    pause();
-    const user = auth.currentUser;
-    if (!user) {
-      console.error("User not authenticated.");
-      return;
-    }
-
-    try {
-      const sessionRef = collection(db, "users", user.uid, "studySessions");
-      await addDoc(sessionRef, {
-        duration: elapsed,
-        timestamp: Date.now(),
-      });
-      console.log("Study session saved.");
-    } catch (err) {
-      console.error("Error saving study session:", err);
-    }
-  };
-
- */

@@ -6,11 +6,12 @@ import { ModulePerformance } from "../widgets/ModulePerformance";
 import { Leaderboard } from "../widgets/Leaderboard";
 import { auth, db } from "@/firebase-config";
 import { collection, query, getDocs } from "firebase/firestore";
+import { calculateStreaks } from "@/lib/streakUtils";
 
 interface ModuleType {
   id: string;
   label: string;
-  value: number; // stored progress (we will compute it)
+  value: number;
   lecturer: string;
   topics: {
     id: string;
@@ -35,8 +36,11 @@ export function DashboardSection() {
   const [modules, setModules] = useState<ModuleType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [streaks, setStreaks] = useState({
+    currentStreak: 0,
+    highestStreak: 0,
+  });
 
-  // Fetch user modules from Firestore
   useEffect(() => {
     async function fetchModules() {
       try {
@@ -60,13 +64,19 @@ export function DashboardSection() {
         setLoading(false);
       }
     }
+
+    async function loadStreaks() {
+      const data = await calculateStreaks();
+      setStreaks(data);
+    }
+
     fetchModules();
+    loadStreaks();
   }, []);
 
   if (loading) return <p>Loading dashboard...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
-  // Compute progress for each module from its topics' quiz scores.
   const modulesWithProgress = modules.map((mod) => {
     const totalScore = mod.topics.reduce(
       (acc, topic) => acc + (topic.quizScore || 0),
@@ -81,7 +91,6 @@ export function DashboardSection() {
     return { label: mod.label, value: progress };
   });
 
-  // Sort modules for strongest and weakest performance
   const sortedStrongModules = modulesWithProgress
     .slice()
     .sort((a, b) => b.value - a.value)
@@ -91,26 +100,28 @@ export function DashboardSection() {
     .sort((a, b) => a.value - b.value)
     .slice(0, Math.min(3, modulesWithProgress.length));
 
-  // Gather assignments along with their module title
   const allAssignments = modules.flatMap((mod) =>
     (mod.assignments || []).map((assignment) => ({
       ...assignment,
       moduleLabel: mod.label,
     }))
   );
-  // Take the first 3 assignments (you can sort these by dueDate if desired)
   const nextAssignments = allAssignments.slice(0, 3);
 
   return (
     <div className="grid md:grid-cols-2 gap-4 w-full px-4 pb-10">
       <BentoGridItem
         title="Current Streak"
-        description="0 days"
+        description={`${streaks.currentStreak} day${
+          streaks.currentStreak === 1 ? "" : "s"
+        }`}
         className="md:row-span-3"
       />
       <BentoGridItem
         title="Longest Streak"
-        description="0 days"
+        description={`${streaks.highestStreak} day${
+          streaks.highestStreak === 1 ? "" : "s"
+        }`}
         className="md:row-span-3"
       />
       <BentoGridItem title="Total Study Time" description="No Data Yet" />
