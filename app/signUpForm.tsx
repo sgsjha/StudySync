@@ -187,7 +187,7 @@ export function SignupFormDemo({
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 md:py-32">
-        <div className="absolute inset-0 bg-[url('/placeholder.svg?height=1080&width=1920')] bg-cover bg-center opacity-5"></div>
+        <div className="absolute inset-0 bg-[url('/placeholder.svg?height=1080&width=1920')] bg-cover bg-center opacity-5 pointer-events-none"></div>
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
             <div className="lg:w-1/2 text-center lg:text-left">
@@ -201,38 +201,20 @@ export function SignupFormDemo({
                 goals.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Button
-                  size="lg"
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                <button
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-6 rounded-lg transition-colors"
                   onClick={() => setShowSignupForm(true)}
                 >
                   Get Started Free
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-emerald-600 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950"
-                >
-                  Watch Demo
-                </Button>
+                </button>
               </div>
               {/* Removed free trial text */}
             </div>
 
-            <div className="lg:w-1/2">
-              <div className="relative">
-                <div className="absolute -inset-1 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl blur-xl opacity-30"></div>
-                <div className="relative bg-white dark:bg-gray-900 rounded-xl shadow-xl overflow-hidden">
-                  <img
-                    src="/placeholder.svg?height=600&width=800"
-                    alt="StudySync Dashboard Preview"
-                    className="w-full h-auto"
-                  />
-                </div>
-                <div className="absolute -bottom-6 -right-6 bg-emerald-600 text-white p-4 rounded-lg shadow-lg">
-                  <p className="font-bold">Join 10,000+ students</p>
-                  <p className="text-sm">who improved their grades</p>
-                </div>
+            <div className="lg:w-1/2 flex items-center justify-center">
+              <div className="bg-emerald-600 text-white p-6 rounded-lg shadow-lg">
+                <p className="font-bold text-lg">Achieve Greatness</p>
+                <p className="text-sm">by taking control of your academics</p>
               </div>
             </div>
           </div>
@@ -288,7 +270,7 @@ export function SignupFormDemo({
                 icon: BrainCircuit,
                 title: "AI-Powered Insights",
                 description:
-                  "Receive personalized recommendations to improve your study efficiency.",
+                  "Take revision quizes and generate mock exams to test your knowledge.",
               },
             ].map((feature, index) => (
               <div
@@ -328,17 +310,17 @@ export function SignupFormDemo({
                 number: "01",
                 title: "Create Your Account",
                 description:
-                  "Sign up for free and set up your student profile with your courses and study preferences.",
+                  "Sign up for free and set up your account in just a seconds.",
               },
               {
                 number: "02",
-                title: "Build Your Study Plan",
+                title: "Add your Study Materials",
                 description:
-                  "Our AI will help you create a personalized study schedule based on your goals and availability.",
+                  "Make your notes, assignments, and study resources to get started.",
               },
               {
                 number: "03",
-                title: "Track Your Progress",
+                title: "Log Your Study Sessions",
                 description:
                   "Log your study sessions and monitor your progress with detailed analytics and insights.",
               },
@@ -346,7 +328,7 @@ export function SignupFormDemo({
                 number: "04",
                 title: "Achieve Your Goals",
                 description:
-                  "Improve your grades and academic performance while reducing stress and study anxiety.",
+                  "Improve your grades with analytics and AI-powered quizes and mock exams",
               },
             ].map((step, index) => (
               <div key={index} className="relative">
@@ -378,18 +360,16 @@ export function SignupFormDemo({
                   Ready to transform your study habits?
                 </h3>
                 <ul className="space-y-2">
-                  {[
-                    "Always free to use",
-                    "No credit card required",
-                    "Cancel anytime",
-                  ].map((item, index) => (
-                    <li key={index} className="flex items-center gap-2">
-                      <CheckCircle className="w-5 h-5 text-emerald-600" />
-                      <span className="text-gray-700 dark:text-gray-300">
-                        {item}
-                      </span>
-                    </li>
-                  ))}
+                  {["Always free to use", "No credit card required"].map(
+                    (item, index) => (
+                      <li key={index} className="flex items-center gap-2">
+                        <CheckCircle className="w-5 h-5 text-emerald-600" />
+                        <span className="text-gray-700 dark:text-gray-300">
+                          {item}
+                        </span>
+                      </li>
+                    )
+                  )}
                 </ul>
               </div>
               <button
