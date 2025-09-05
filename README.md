@@ -9,7 +9,7 @@ Track study sessions, organize modules, and generate personalized quizzes and mo
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=000000)](https://firebase.google.com)
-[![OpenAI API](https://img.shields.io/badge/OpenAI%20API-integrated-000000?style=for-the-badge&logo=openai&logoColor=white)](https://platform.openai.com/)
+[![OpenAI API](https://img.shields.io/badge/OpenAI%20API-000000?style=for-the-badge&logo=openai&logoColor=white)](https://platform.openai.com/)
 [![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com)
 
 </div>
