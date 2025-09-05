@@ -1,37 +1,113 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+# 📚 StudySync — Your AI-Powered Study Companion
 
-First, run the development server:
+Track study sessions, organize modules, and generate personalized quizzes and mock exams with ChatGPT.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+[![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org)
+[![React](https://img.shields.io/badge/React-20232a?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=000000)](https://firebase.google.com)
+[![OpenAI API](https://img.shields.io/badge/OpenAI%20API-integrated-000000?style=for-the-badge&logo=openai&logoColor=white)](https://platform.openai.com/)
+[![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com)
+
+</div>
+
+---
+
+- 🌐 Live demo: https://study-sync-ochre.vercel.app/
+
+---
+
+## ✨ Features
+
+- 🔐 **User Auth:** Secure login and logout using Firebase Authentication  
+- ⏱️ **Study Sessions:** Start, pause, resume, and stop study timers with automatic Firebase sync  
+- 📚 **Modules & Topics:** Add, edit, and delete modules (like *Math*, *Physics*) and their topics  
+- 🧠 **Quiz Generator:** Auto-generate topic-wise practice quizzes using ChatGPT  
+- 📝 **Mock Exams:** Create full-length tests spanning multiple topics  
+- 🤖 **ChatGPT Help:** Personalized study Q&A using GPT  
+- 🖥️ **Responsive UI:** Built with Tailwind, mobile-first design  
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Next.js 14 (App Router), React 18, TypeScript, Tailwind CSS, Shadcn/ui, Aceternity UI
+- **Backend Services:**  
+  - Firebase Auth  
+  - Firebase Firestore   
+  - OpenAI ChatGPT API (GPT-4)  
+- **Tooling:** ESLint, Prettier, Vercel, `.env` config
+
+---
+
+## 🗂️ Project Structure
+
+```
+study-sync/
+├── app/
+│   ├── page.tsx              # Home page
+│   ├── login/page.tsx        # Login/Register
+│   └── dashboard/
+│       ├── modules/          # Module & topic management
+│       ├── quiz/             # Quiz generation & gameplay
+│       └── mock/             # Mock exam generation & attempt
+│   └── layout.tsx           # App layout and theming
+├── components/
+│   ├── SessionTimer.tsx
+│   ├── ModuleEditor.tsx
+│   └── QuizPlayer.tsx
+├── lib/
+│   ├── firebase.ts           # Firebase config
+│   ├── gpt.ts                # ChatGPT integration
+│   └── api/                  # Data fetching logic
+├── store/
+│   └── userStore.ts
+├── types/
+│   └── index.ts              # Global TypeScript types
+├── public/
+│   └── logo.png
+├── styles/
+│   └── globals.css
+├── .env.local
+├── tsconfig.json
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Quick Start
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+git clone https://github.com/yourusername/study-sync.git
+cd study-sync
+npm install
+npm run dev
+```
 
-## Learn More
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📦 Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Script        | Description                     |
+|---------------|---------------------------------|
+| `dev`         | Start the development server    |
+| `build`       | Create production build         |
+| `start`       | Run the production build        |
+| `lint`        | Lint the codebase               |
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📬 Contact
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# StudySync
+- 🔗 [LinkedIn](https://www.linkedin.com/in/sarthak-jhaa/)
+- 💻 [GitHub](https://github.com/sgsjha)
+- 📸 [Instagram](https://instagram.com/sarthak.jhaa)
+
+---
+
+Built with 💙 for students who want smarter, stress-free studying.
