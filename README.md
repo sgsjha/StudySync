@@ -45,35 +45,58 @@ Track study sessions, organize modules, and generate personalized quizzes and mo
 
 ## 🗂️ Project Structure
 
-```
-study-sync/
+```study-sync/
 ├── app/
-│   ├── page.tsx              # Home page
-│   ├── login/page.tsx        # Login/Register
-│   └── dashboard/
-│       ├── modules/          # Module & topic management
-│       ├── quiz/             # Quiz generation & gameplay
-│       └── mock/             # Mock exam generation & attempt
-│   └── layout.tsx           # App layout and theming
+│   ├── contexts/
+│   ├── SidebarDemo.tsx
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.tsx
+│   ├── modulesData.ts
+│   ├── page.tsx
+│   └── signUpForm.tsx
 ├── components/
-│   ├── SessionTimer.tsx
-│   ├── ModuleEditor.tsx
-│   └── QuizPlayer.tsx
+│   ├── charts/
+│   │   └── StudyHoursChart.tsx
+│   ├── details/
+│   │   ├── ModuleDetails.tsx
+│   │   ├── PracticeExam.tsx
+│   │   ├── PracticeExamModal.tsx
+│   │   ├── TopicDetails.tsx
+│   │   └── TopicQuiz.tsx
+│   ├── sections/
+│   │   ├── DashboardSection.tsx
+│   │   ├── LeaderboardSection.tsx
+│   │   ├── ModulesSection.tsx
+│   │   ├── RevisionSection.tsx
+│   │   └── StudySection.tsx
+│   ├── ui/
+│   │   ├── bento-grid.tsx
+│   │   ├── button.tsx
+│   │   ├── card.tsx
+│   │   ├── dialog.tsx
+│   │   ├── input.tsx
+│   │   ├── label.tsx
+│   │   ├── sheet.tsx
+│   │   └── sidebar.tsx
+│   └── widgets/
+│       ├── Leaderboard.tsx
+│       └── ModulePerformance.tsx
 ├── lib/
-│   ├── firebase.ts           # Firebase config
-│   ├── gpt.ts                # ChatGPT integration
-│   └── api/                  # Data fetching logic
-├── store/
-│   └── userStore.ts
-├── types/
-│   └── index.ts              # Global TypeScript types
+│   ├── openaiClient.ts
+│   ├── practiceExamClient.ts
+│   ├── streakUtils.ts
+│   └── utils.ts
 ├── public/
 │   └── logo.png
-├── styles/
-│   └── globals.css
-├── .env.local
+├── .gitignore
+├── README.md
+├── components.json
+├── eslint.config.mjs
+├── firebase-config.ts
+├── next.config.ts
 ├── tsconfig.json
-└── README.md
+└── .env.local
 ```
 
 ---
